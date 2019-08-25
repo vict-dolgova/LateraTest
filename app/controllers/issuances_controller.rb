@@ -9,7 +9,6 @@ class IssuancesController < ApplicationController
         <ul>
           <li>Абонент не может быть пустым;</li>
           <li>Дата возврата должна не раньше даты выдачи;</li>
-          <li>Дата выдачи должна быть не раньше даты возвращения книги.</li>
         </ul>
         <h2>Попробуйте еще раз</h2>
         <%= link_to 'Назад', book_path(@book) %>

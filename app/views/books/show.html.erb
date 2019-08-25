@@ -24,13 +24,6 @@
 <div class="container-fluid">
   <div class="form-body issuance">
     <%= form_with(model: [ @book, @book.issuances.build ], local: true) do |form| %>
-    <% @l=Issuance.where(book_id: @book.id).order(:returnDate).last %>
-    <% if @l %>
-      <div class="field">
-        <%= form.label 'Книгу вернут/вернули:' %>
-        <strong><%= @l.returnDate %></strong>
-      </div>
-    <% end %>
 
       <div class="field">
         <%= form.label 'Абонент:' %>
