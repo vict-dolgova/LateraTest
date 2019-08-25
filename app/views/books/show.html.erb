@@ -1,0 +1,101 @@
+<div class="content">
+<header class="header">
+  <div class="container-fluid">
+    <div class="issuance-header">
+      <div class="img">
+        <%= image_tag(@book.cover.url) if @book.cover.exists?%>
+      <div>
+        <h1><%= @book.name %></h1>
+        <h2><%= @book.author %></h2>
+        <h2><%= @book.cipher %></h2>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="employees" class="section">
+  <div class="container-fluid">
+    <div>
+      <h1>Оформление выдачи</h1>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="form-body issuance">
+    <%= form_with(model: [ @book, @book.issuances.build ], local: true) do |form| %>
+    <% @l=Issuance.where(book_id: @book.id).order(:returnDate).last %>
+    <% if @l %>
+      <div class="field">
+        <%= form.label 'Книгу вернут/вернули:' %>
+        <strong><%= @l.returnDate %></strong>
+      </div>
+    <% end %>
+
+      <div class="field">
+        <%= form.label 'Абонент:' %>
+        <%= form.collection_select :subscriber_id, Subscriber.where(library_id: @book.library_id), :id, :ticketnumber %>
+      </div>
+
+      <div class="field date">
+        <%= form.label 'Дата выдачи:' %>
+        <%= form.date_select :issueDate, {order: [:day, :month, :year] }, {required: true}%>
+      </div>
+
+      <div class="field date">
+        <%= form.label 'Дата возврата:' %>
+        <%= form.date_select :returnDate, {order: [:day, :month, :year] }, {required: true}%>
+      </div>
+
+      <div class="actions">
+        <%= form.submit "Выдать", class: "btn btn-warning"%>
+      </div>
+    <%end%>
+  </div>
+  <span class="link-back"><%= link_to 'К библиотеке', library_path(Library.find(@book.library_id)) %></span>
+</div>
+
+<div id="employees" class="section">
+  <div class="container-fluid">
+    <div>
+      <h1>История выдачей</h1>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Абонент</th>
+      <th>Дата выдачи</th>
+      <th>Дата возврата</th>
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @book.issuances.each do |issuance| %>
+      <% if issuance.id %>
+        <tr>
+          <td><%= issuance.id %></td>
+          <td><%= Subscriber.find(issuance.subscriber_id).ticketnumber %> <%= Subscriber.find(issuance.subscriber_id).surname %> <%= Subscriber.find(issuance.subscriber_id).name%></td>
+          <td><%= issuance.issueDate %></td>
+          <td><%= issuance.returnDate %></td>
+          <td><%= link_to 'Удалить', issuance, method: :delete, data: { confirm: 'Вы уверены?' }%></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+<span class="link-back"><%= link_to 'К библиотеке', library_path(Library.find(@book.library_id)) %></span>
+</div>
+<br>
+</div>
+
+<footer class="footer text-center">
+  <p>Виктория Долгова</p>
+  <p><a href="tel:89150580949">8(915)-058-09-49</a></p>
+  <p><a href="mailto:vict.dovgova@gmail.com">vict.dolgova@gmail.com</a></p>
+</footer>
